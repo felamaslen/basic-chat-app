@@ -7,7 +7,7 @@ export default function App() {
     if (typeof APP_VERSION === 'string') {
         version = APP_VERSION; // eslint-disable-line no-undef
     }
-    const className = `boilerplate-app version-${version}`;
+    const className = `basic-chatbot-app version-${version}`;
 
     return <div className={className}>
         <ChatBot />
