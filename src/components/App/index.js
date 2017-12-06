@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Message from '../../containers/Message';
+import ChatBot from '../../containers/ChatBot';
 
 export default function App() {
     let version = 0;
@@ -10,8 +10,7 @@ export default function App() {
     const className = `boilerplate-app version-${version}`;
 
     return <div className={className}>
-        <h1>{'It works!'}</h1>
-        <Message />
+        <ChatBot />
     </div>;
 }
 

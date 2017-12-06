@@ -2,8 +2,10 @@
  * The initial application state is set here
  */
 
+import questions from './constants/chat-tree';
+
 export default {
-    message: 'Hello. Click the button!',
-    inputValue: 'Write something here'
+    questionsAnswered: [],
+    nextQuestion: questions[0]
 };
 
