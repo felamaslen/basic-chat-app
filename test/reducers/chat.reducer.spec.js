@@ -1,29 +1,64 @@
 import { expect } from 'chai';
-import * as R from '../../src/reducers/app.reducer';
+import * as R from '../../src/reducers/chat.reducer';
 
-describe('App reducer', () => {
-    describe('handleButtonClick', () => {
-        it('should update the state\'s message with the input value or optional custom message', () => {
-            expect(R.handleButtonClick({}, { message: 'foo' })).to.deep.equal({
-                message: 'foo'
+import { TYPES } from '../../src/constants/chat-tree';
+
+describe('Chat reducer', () => {
+    describe('answerQuestion', () => {
+        const state = {
+            questionsAnswered: []
+        };
+
+        let nextState = null;
+
+        it('should add answered question to the state and prompt for the next question', () => {
+            nextState = R.answerQuestion(state, { id: 1, text: 'Right', next: 3 });
+
+            expect(nextState).to.deep.equal({
+                questionsAnswered: [
+                    { id: 1, question: 'Left or right?', answer: 'Right' }
+                ],
+                nextQuestion: {
+                    id: 3,
+                    question: 'What is your name?',
+                    answer: {
+                        type: TYPES.INPUT_STRING,
+                        next: 5
+                    }
+                }
             });
 
-            expect(R.handleButtonClick({ message: 'foo' }, { message: 'bar' })).to.deep.equal({
-                message: 'bar'
+            nextState = R.answerQuestion(nextState, { id: 3, text: 'Some name', next: 5 });
+
+            expect(nextState).to.deep.equal({
+                questionsAnswered: [
+                    { id: 1, question: 'Left or right?', answer: 'Right' },
+                    { id: 3, question: 'What is your name?', answer: 'Some name' }
+                ],
+                nextQuestion: {
+                    id: 5,
+                    question: 'What is your favourite colour?',
+                    answer: {
+                        type: TYPES.SELECT,
+                        options: [
+                            { text: 'Red', next: -1 },
+                            { text: 'Blue', next: -1 }
+                        ]
+                    }
+                }
             });
-
-            expect(R.handleButtonClick({ message: 'foo', inputValue: 'bar' }, { message: 'baz' }))
-                .to.deep.equal({ message: 'baz', inputValue: 'bar' });
-
-            expect(R.handleButtonClick({ message: 'foo', inputValue: 'bar' }, {}))
-                .to.deep.equal({ message: 'bar', inputValue: 'bar' });
         });
-    });
 
-    describe('handleInputChange', () => {
-        it('should update the state\'s inputValue with the new value', () => {
-            expect(R.handleInputChange({}, { value: 'foo' })).to.deep.equal({
-                inputValue: 'foo'
+        it('should reset the next question to an empty object once finished', () => {
+            nextState = R.answerQuestion(nextState, { id: 5, text: 'Red', next: -1 });
+
+            expect(nextState).to.deep.equal({
+                questionsAnswered: [
+                    { id: 1, question: 'Left or right?', answer: 'Right' },
+                    { id: 3, question: 'What is your name?', answer: 'Some name' },
+                    { id: 5, question: 'What is your favourite colour?', answer: 'Red' }
+                ],
+                nextQuestion: {}
             });
         });
     });

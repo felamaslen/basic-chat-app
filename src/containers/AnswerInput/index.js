@@ -5,7 +5,7 @@ import { questionAnswered } from '../../actions/chat.actions';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class AnswerInput extends Component {
+export class AnswerInput extends Component {
     constructor(props) {
         super(props);
 
